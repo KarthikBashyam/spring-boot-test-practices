@@ -24,7 +24,7 @@ public class CustomerService {
         this.customerMapper = customerMapper;
     }
 
-    public CustomerDTO getUserDetails(Long id) {
+    public CustomerDTO getCustomerDetails(Long id) {
 
         Optional<Customer> customer = userRepository.findById(id);
         if(customer.isPresent()) {
@@ -34,6 +34,7 @@ public class CustomerService {
         }
     }
 
-    public void createCustomer(CustomerDTO customer) {
+    public void createCustomer(CustomerDTO customerDTO) {
+        this.userRepository.save(customerMapper.mapFromDTOtoEntity(customerDTO));
     }
 }

@@ -4,6 +4,7 @@ import com.customer.shows.favourite.domain.Customer;
 import com.customer.shows.favourite.dto.CustomerDTO;
 import com.customer.shows.favourite.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,15 +20,14 @@ public class CustomerController {
         this.customerService = userService;
     }
 
-    @PostMapping
+    @PostMapping("/customer")
     public void createCustomer(@RequestBody CustomerDTO customer) {
-        customerService.createCustomer(customer);
+        this.customerService.createCustomer(customer);
     }
 
     @GetMapping("/customer/{id}")
     public ResponseEntity<CustomerDTO> getCustomerDetails(@PathVariable("id") Long id) {
-
-        CustomerDTO customerDetails = customerService.getUserDetails(id);
+        CustomerDTO customerDetails = customerService.getCustomerDetails(id);
         return ResponseEntity.ok(customerDetails);
     }
 
