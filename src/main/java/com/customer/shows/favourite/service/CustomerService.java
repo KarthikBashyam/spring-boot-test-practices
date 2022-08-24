@@ -8,7 +8,9 @@ import com.customer.shows.favourite.util.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -34,7 +36,13 @@ public class CustomerService {
         }
     }
 
-    public void createCustomer(CustomerDTO customerDTO) {
-        this.userRepository.save(customerMapper.mapFromDTOtoEntity(customerDTO));
+    public Long createCustomer(CustomerDTO customerDTO) {
+        Customer customer = this.userRepository.save(customerMapper.mapFromDTOtoEntity(customerDTO));
+        return customer.getId();
+    }
+
+    public List<CustomerDTO> findAllCustomers() {
+        List<Customer> customerList = this.userRepository.findAll();
+        return customerList.stream().map(customerMapper::mapFromEntityTODTO).collect(Collectors.toList());
     }
 }

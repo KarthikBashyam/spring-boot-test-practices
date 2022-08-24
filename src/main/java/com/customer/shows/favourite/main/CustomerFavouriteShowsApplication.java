@@ -31,14 +31,14 @@ public class CustomerFavouriteShowsApplication {
 		SpringApplication.run(CustomerFavouriteShowsApplication.class, args);
 	}
 
-	/*@Bean
+	@Bean
 	CommandLineRunner startup(CustomerRepository userRepository) {
 		return (args) -> {
 			Customer customer = new Customer("Karthik");
 			customer.addFavouriteShow(new FavouriteShow("Fargo"));
 			userRepository.save(customer);
 		};
-	}*/
+	}
 
 	@Bean
 	RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
