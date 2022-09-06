@@ -1,9 +1,10 @@
 package com.customer.shows.favourite.main;
 
-import com.customer.shows.favourite.util.AppConfig;
-import com.customer.shows.favourite.domain.Customer;
 import com.customer.shows.favourite.dao.CustomerRepository;
+import com.customer.shows.favourite.domain.Customer;
 import com.customer.shows.favourite.domain.FavouriteShow;
+import com.customer.shows.favourite.util.AppConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,10 +26,11 @@ import java.util.List;
 @EntityScan(basePackages = "com.customer.shows.favourite.domain")
 @EnableJpaRepositories(basePackages = "com.customer.shows.favourite.*")
 @EnableConfigurationProperties(AppConfig.class)
-public class CustomerFavouriteShowsApplication {
+@Slf4j
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CustomerFavouriteShowsApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 	@Bean

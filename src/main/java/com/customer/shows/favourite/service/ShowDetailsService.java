@@ -1,14 +1,15 @@
 package com.customer.shows.favourite.service;
 
+import com.customer.shows.favourite.dto.ShowDetailsResponseDTO;
 import com.customer.shows.favourite.util.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class ShowDetailsService {
@@ -22,14 +23,15 @@ public class ShowDetailsService {
         this.restTemplate = restTemplate;
         this.appConfig = appConfig;
     }
-    public String getShowDetails(String showName) {
+    public ShowDetailsResponseDTO getShowDetails(String showName) {
 
         var url = appConfig.getShowDetailsServiceUrl();
 
-        var params = new HashMap<>();
-        params.put("q",showName);
-        System.out.println(url);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, String.class, params);
+        var requestParams = new HashMap<String, String>();
+        requestParams.put("showName", showName);
+        ResponseEntity<ShowDetailsResponseDTO> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<ShowDetailsResponseDTO>() {
+        },requestParams);
+
         return responseEntity.getBody();
     }
 }

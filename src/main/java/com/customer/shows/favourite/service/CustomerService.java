@@ -4,7 +4,7 @@ import com.customer.shows.favourite.dao.CustomerRepository;
 import com.customer.shows.favourite.domain.Customer;
 import com.customer.shows.favourite.dto.CustomerDTO;
 import com.customer.shows.favourite.exceptions.CustomerNotFoundException;
-import com.customer.shows.favourite.util.CustomerMapper;
+import com.customer.shows.favourite.mapper.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,19 +30,19 @@ public class CustomerService {
 
         Optional<Customer> customer = userRepository.findById(id);
         if(customer.isPresent()) {
-            return customerMapper.mapFromEntityTODTO(customer.get());
+            return customerMapper.mapToDTO(customer.get());
         } else {
             throw new CustomerNotFoundException(String.valueOf(id));
         }
     }
 
     public Long createCustomer(CustomerDTO customerDTO) {
-        Customer customer = this.userRepository.save(customerMapper.mapFromDTOtoEntity(customerDTO));
+        Customer customer = this.userRepository.save(customerMapper.mapToEntity(customerDTO));
         return customer.getId();
     }
 
     public List<CustomerDTO> findAllCustomers() {
         List<Customer> customerList = this.userRepository.findAll();
-        return customerList.stream().map(customerMapper::mapFromEntityTODTO).collect(Collectors.toList());
+        return customerList.stream().map(customerMapper::mapToDTO).collect(Collectors.toList());
     }
 }

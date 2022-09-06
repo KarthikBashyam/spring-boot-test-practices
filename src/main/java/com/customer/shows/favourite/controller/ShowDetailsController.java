@@ -1,7 +1,9 @@
 package com.customer.shows.favourite.controller;
 
+import com.customer.shows.favourite.dto.ShowDetailsResponseDTO;
 import com.customer.shows.favourite.service.ShowDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +19,8 @@ public class ShowDetailsController {
     }
 
     @GetMapping("/show/details")
-    public String getShowDetails(@RequestParam("show") String shownName) {
-        return showDetailsService.getShowDetails(shownName);
+    public ResponseEntity<ShowDetailsResponseDTO> getShowDetails(@RequestParam("show") String shownName) {
+        ShowDetailsResponseDTO detailsResponseDTO = showDetailsService.getShowDetails(shownName);
+        return ResponseEntity.ok(detailsResponseDTO);
     }
 }

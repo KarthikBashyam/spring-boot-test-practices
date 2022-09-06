@@ -1,4 +1,4 @@
-package com.customer.shows.favourite.util;
+package com.customer.shows.favourite.mapper;
 
 import com.customer.shows.favourite.domain.Customer;
 import com.customer.shows.favourite.domain.FavouriteShow;
@@ -6,32 +6,30 @@ import com.customer.shows.favourite.dto.CustomerDTO;
 import com.customer.shows.favourite.dto.FavouriteShowDTO;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
-
 @Component
 public class CustomerMapper {
 
-    public Customer mapFromDTOtoEntity(CustomerDTO customerDTO) {
+    public Customer mapToEntity(CustomerDTO customerDTO) {
         Customer customer = new Customer();
         customer.setName(customerDTO.getName());
-        customerDTO.getFavouriteShowList().stream().map(this::mapFavouriteShowDTO).forEach(customer::addFavouriteShow);
+        customerDTO.getFavouriteShowList().stream().map(this::mapToEntity).forEach(customer::addFavouriteShow);
         return customer;
     }
 
-    public CustomerDTO mapFromEntityTODTO(Customer customer) {
+    public CustomerDTO mapToDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setName(customer.getName());
-        customer.getFavouriteShowsList().stream().map(this::mapFavouriteShowDTO).forEach(customerDTO::addFavouriteShow);
+        customer.getFavouriteShowsList().stream().map(this::mapToDTO).forEach(customerDTO::addFavouriteShow);
         return customerDTO;
     }
 
-    private FavouriteShow mapFavouriteShowDTO(FavouriteShowDTO favouriteShowDTO) {
+    private FavouriteShow mapToEntity(FavouriteShowDTO favouriteShowDTO) {
         FavouriteShow favouriteShow = new FavouriteShow();
         favouriteShow.setShowName(favouriteShowDTO.getShowName());
         return favouriteShow;
     }
 
-    private FavouriteShowDTO mapFavouriteShowDTO(FavouriteShow favouriteShow) {
+    private FavouriteShowDTO mapToDTO(FavouriteShow favouriteShow) {
         FavouriteShowDTO favouriteShowDTO = new FavouriteShowDTO();
         favouriteShowDTO.setShowName(favouriteShow.getShowName());
         return favouriteShowDTO;

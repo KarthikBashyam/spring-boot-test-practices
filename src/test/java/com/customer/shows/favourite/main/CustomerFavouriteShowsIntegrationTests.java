@@ -2,16 +2,12 @@ package com.customer.shows.favourite.main;
 
 import com.customer.shows.favourite.dao.CustomerRepository;
 import com.customer.shows.favourite.domain.Customer;
-
-import static org.assertj.core.api.Assertions.*;
-
 import com.customer.shows.favourite.dto.CustomerDTO;
 import com.customer.shows.favourite.dto.FavouriteShowDTO;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +21,11 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -57,15 +57,14 @@ class CustomerFavouriteShowsIntegrationTests {
     @Order(1)
     void createCustomer_withFavouriteShows() {
 
-        CustomerDTO expectedCustomerDTO = createCustomerDTO("Karthik Bashyam", "Fargo");
+        CustomerDTO expectedCustomerDTO = createCustomerDTO("Karthik Bashyam", Arrays.asList("Fargo"));
+        ResponseEntity<Long> response = createCustomer(expectedCustomerDTO);
+        Optional<Customer> actualCustomer = findCustomerByIdInDB(response.getBody());
 
-        ResponseEntity<Long> response = restTemplate.postForEntity("/customer", expectedCustomerDTO, Long.class);
-        Optional<Customer> actualCustomer = customerRepository.findById(response.getBody());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actualCustomer.get().getId()).isEqualTo(response.getBody());
         assertThat(actualCustomer.get().getName()).isEqualTo(expectedCustomerDTO.getName());
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
-
 
     @Test
     @Order(2)
@@ -77,12 +76,21 @@ class CustomerFavouriteShowsIntegrationTests {
     }
 
     @NotNull
-    private CustomerDTO createCustomerDTO(String customerName, String... showNames) {
+    private CustomerDTO createCustomerDTO(String customerName, List<String> favShowsList) {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setName(customerName);
-        for (String show : showNames) {
+        for (String show : favShowsList) {
             customerDTO.addFavouriteShow(new FavouriteShowDTO(show));
         }
         return customerDTO;
     }
+
+    private ResponseEntity<Long> createCustomer(CustomerDTO expectedCustomerDTO) {
+        return restTemplate.postForEntity("/customer", expectedCustomerDTO, Long.class);
+    }
+
+    private Optional<Customer> findCustomerByIdInDB(Long id) {
+        return customerRepository.findById(id);
+    }
+
 }
